@@ -19,6 +19,7 @@ public:
 	virtual ~Point();
 
 	Point& operator=(const Point & other);
+	Point& operator+=(const Point & other);
 
 	const string& getNom() const;
 	void setNom(const string &nom);
@@ -36,5 +37,8 @@ private:
 	double x;
 	double y;
 };
+
+ostream &operator<<(ostream &out, const Point &p);
+ostream &operator<<(ostream &out, const Point *p);
 
 #endif /* POINT_H_ */
