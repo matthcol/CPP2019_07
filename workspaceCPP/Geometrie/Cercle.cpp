@@ -8,11 +8,6 @@
 #include "Cercle.h"
 
 
-Cercle::Cercle() {
-	// TODO Auto-generated constructor stub
-
-}
-
 Cercle::Cercle(Point *centre, double rayon):centre(centre), rayon(rayon) {
 }
 
