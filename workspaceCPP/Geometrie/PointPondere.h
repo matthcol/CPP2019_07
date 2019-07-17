@@ -19,6 +19,8 @@ public:
 	double getPoids() const;
 	void setPoids(double poids);
 
+	virtual string toString() const override; // redéfinition (override)
+
 private:
 	double poids;
 };

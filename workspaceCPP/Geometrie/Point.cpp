@@ -11,29 +11,29 @@
 #include <cmath>
 
 Point::Point():x(0.0), y(0.0) {
-	clog << "Point créé avec 0 paramètre" << endl;
+	clog << "Point créé avec 0 paramètre : " << *this << endl;
 }
 
-Point::Point(const string &nom, double x, double y):nom(nom), x(x), y(y)
+Point::Point(const string &nom, double x, double y):Figure(nom), x(x), y(y)
 {
 	// ICI : tout sauf initialisation attributs
-	clog << "Point créé avec 3 paramètres" << endl;
+	clog << "Point créé avec 3 paramètres : " << *this << endl;
 }
 
-Point::Point(const Point &other):nom(other.nom), x(other.x), y(other.y) {
-	clog << "Point créé par copie" << endl;
+Point::Point(const Point &other):Figure(other.getNom()), x(other.x), y(other.y) {
+	clog << "Point créé par copie : " << *this << endl;
 }
 
 Point::~Point() {
 	// TODO Auto-generated destructor stub
-	clog << "destruction Point" << endl;
+	clog << "destruction Point : " << *this << endl;
 }
 
 Point& Point::operator=(const Point &other) {
-	nom = other.nom;
+	setNom(other.getNom());
 	x = other.x;
 	y = other.y;
-	clog << "copie de Point" << endl;
+	clog << "copie de Point : " << other << endl;
 	return *this;
 }
 
@@ -51,13 +51,6 @@ ostream& operator <<(ostream &out, const Point *p) {
 	return out << *p;
 }
 
-const string& Point::getNom() const {
-	return nom;
-}
-
-void Point::setNom(const string &nom) {
-	this->nom = nom;
-}
 
 double Point::getX() const {
 	return x;
@@ -77,7 +70,7 @@ void Point::setY(double y) {
 
 string Point::toString() const {
 	ostringstream res;
-	res << nom << "(" << x << "," << y << ")";
+	res << getNom() << "(" << x << "," << y << ")";
 	return res.str();
 }
 

@@ -10,8 +10,9 @@
 
 using namespace std;
 #include <string>
+#include "Figure.h"
 
-class Point {
+class Point: public Figure {
 public:
 	Point();
 	Point(const string &nom, double x, double y);
@@ -21,19 +22,18 @@ public:
 	Point& operator=(const Point & other);
 	Point& operator+=(const Point & other);
 
-	const string& getNom() const;
-	void setNom(const string &nom);
+
 	double getX() const;
 	void setX(double x);
 	double getY() const;
 	void setY(double y);
 
-	string toString() const;
+	virtual string toString() const;
+
 	double distance(const Point &other) const;
 	void translater(double deltaX, double deltaY);
 
 private:
-	string nom;
 	double x;
 	double y;
 };

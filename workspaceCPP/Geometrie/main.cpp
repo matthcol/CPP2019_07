@@ -152,10 +152,47 @@ void scenarioGdeDistance() {
 }
 
 void scenarioHeritage() {
-	PointPondere p("H", 5.6, 6.5, 12.45);
-	cout << p.toString() << endl;
-	cout << "X = " << p.getX() << endl;
-	cout << "Poids = " << p.getPoids() << endl;
+	PointPondere pH("H", 5.6, 6.5, 12.45);
+	cout << pH.toString() << endl;
+	cout << pH << endl;  // appelle le toString de la classe P
+	cout << "X = " << pH.getX() << endl;
+	cout << "Poids = " << pH.getPoids() << endl;
+
+	Point pA("A", 3.0, 4.0);
+	double d1 = pA.distance(pH); // principe de substitutionde Liskov (LSP)
+	double d2 = pH.distance(pA); // on peut appeler sur un PP une méthode d'un P
+	cout << "distances : " << d1 << " ; " << d2 << endl;
+
+	Cercle c(&pH, 5.0);
+	cout << c << endl;
+
+	pA = pH; // copie du PP pH en tant que P
+	cout << pA << endl;
+	cout << "pA est-il un Point ? " << boolalpha <<
+			(typeid(pA) == typeid(Point)) << endl;
+	cout << "pA est-il un PointPondéré ? " << boolalpha <<
+			(typeid(pA) == typeid(PointPondere)) << endl;
+
+	PointPondere &rpH = pH;
+	PointPondere *ppH = &pH;
+
+	Point &rp = pH;
+	Point *pp = &pH;
+
+	cout << "rp est-il un Point ? " << boolalpha <<
+				(typeid(rp) == typeid(Point)) << endl;
+	cout << "rp est-il un PointPondéré ? " << boolalpha <<
+				(typeid(rp) == typeid(PointPondere)) << endl;
+	cout << "pp pointe-t-il un Point ? " << boolalpha <<
+					(typeid(*pp) == typeid(Point)) << endl;
+	cout << "pp pointe-t-il un PointPondéré ? " << boolalpha <<
+					(typeid(*pp) == typeid(PointPondere)) << endl;
+
+//	rp.getPoids();
+//	pp->getPoids();
+
+	pp = new PointPondere("Z", 4.5, 5.4, 6.3);
+	delete pp;
 }
 
 int main () {
