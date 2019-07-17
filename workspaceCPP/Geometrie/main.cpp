@@ -9,6 +9,7 @@ using namespace std;
 #include <vector>
 
 #include "Point.h"
+#include "Cercle.h"
 
 void scenario1() {
 	Point p;
@@ -61,31 +62,81 @@ vector<Point*>* initData() {
 
 	pp = new Point("A",3.4, 5.7);
 	ppoints->push_back(pp);
+	cout << "adresse de A : " << pp << endl;
 
 	pp = new Point("B",9.4, 56.4);
 	ppoints->push_back(pp);
+	cout << "adresse de B : " << pp << endl;
+
+	cout << "adresse du vecteur : " << ppoints << endl;
 	return ppoints;
 }
 
+
+void calculerDistance(const vector<Point*> &points) {
+	Point pointRef("Ref", 15.6, 67.41);
+	// calculer la distance de chaque point du vecteur au pointRef et l'afficher
+	for(const auto pp: points) {
+		double d1 = pointRef.distance(*pp);
+		double d2 = pp->distance(pointRef);
+		cout << "distance " << pointRef.toString() << " à "
+				<< pp->toString() << " = " << d1 << " = " << d2 << endl;
+	}
+}
+
+void translaterTous(vector<Point*> &points) {
+	double deltaX = 1.11;
+	double deltaY = -1.0001;
+	for(auto pp: points) {
+		pp->translater(deltaX, deltaY);
+	}
+	// translater tous les points du vecteur de (deltaX, deltaY)
+}
+
 void displayData(const vector<Point*> &points) {
-	for (const Point *p : points) {
-		cout << p->toString() << " ";
+	for (const Point *pp : points) {
+		cout << pp->toString() << " ";
+		//cout << "#" << pp << "# ";
 	}
 	cout << endl;
 }
 
 void clearData(vector<Point*> *ppoints) {
-	// TODO
+	for (Point* pp : *ppoints) {
+		delete pp;  // appel du destructeur de Point + desalloue la memoire
+	}
+	delete ppoints; // appel du destructeur du vector + desallocation memoire
 }
 
 void scenario4() {
 	vector<Point*> *ppoints = initData();
+	cout << "adresse du vecteur : " << ppoints << endl;
 	displayData(*ppoints);
+	calculerDistance(*ppoints);
+	translaterTous(*ppoints);
+	displayData(*ppoints);
+
+	Point &p1 = *((*ppoints)[0]);
+	Point &p2 = *((*ppoints)[1]);
+
+	p1 += p2;
+	displayData(*ppoints);
+
+	cout << "P1 par ref : " << p1 << endl;
+	clog << "P1 par ref : " << p1 << endl;
+	cout << "P1 par pointeur : " << (*ppoints)[0] << endl;
+
 	clearData(ppoints);
 }
 
+void scenario5() {
+	Point p("A", 3.0, 4.0);
+	Cercle c(&p, 5.0);
+	cout << "point : " << p << endl;
+	cout << "cercle : " << c << endl;
+}
 
 int main () {
-	scenario4();
+	scenario5();
 	return 0;
 }
