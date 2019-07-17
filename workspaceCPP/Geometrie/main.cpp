@@ -74,9 +74,14 @@ void displayData(const vector<Point*> &points) {
 	cout << endl;
 }
 
+void clearData(vector<Point*> *ppoints) {
+	// TODO
+}
+
 void scenario4() {
 	vector<Point*> *ppoints = initData();
 	displayData(*ppoints);
+	clearData(ppoints);
 }
 
 
