@@ -82,7 +82,8 @@ string Point::toString() const {
 }
 
 double Point::distance(const Point &other) const {
-	return sqrt(pow(x - other.x, 2.0) + pow(y -other.y, 2.0));
+	//return sqrt(pow(x - other.x, 2.0) + pow(y -other.y, 2.0));
+	return hypot(x - other.x, y -other.y);
 }
 
 

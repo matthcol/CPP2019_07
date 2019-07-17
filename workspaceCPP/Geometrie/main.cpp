@@ -6,10 +6,13 @@
  */
 using namespace std;
 #include <iostream>
+#include <iomanip>
 #include <vector>
+#include <cmath>
 
 #include "Point.h"
 #include "Cercle.h"
+#include "PointPondere.h"
 
 void scenario1() {
 	Point p;
@@ -130,13 +133,34 @@ void scenario4() {
 }
 
 void scenario5() {
-	Point p("A", 3.0, 4.0);
-	Cercle c(&p, 5.0);
-	cout << "point : " << p << endl;
+	Point pA("A", 3.0, 4.0);
+	Point pB("B", 1.0, 2.0);
+	Point pE("E", -0.1, 0.0);
+	Cercle c(&pA, 5.0);
+	cout << "point : " << pA << endl;
 	cout << "cercle : " << c << endl;
+	cout << pB << " dans " << c << " : " << boolalpha << c.contient(pB) << endl;
+	cout << pE << " dans " << c << " : " << boolalpha << c.contient(pE) << endl;
+	cout << pA << " dans " << c << " : " << boolalpha << c.contient(pA) << endl;
+}
+
+void scenarioGdeDistance() {
+	Point p1;
+	Point p2("A", 1E308, 0.0);
+	double d = p1.distance(p2);
+	cout << "grande distance : " << d << endl;
+}
+
+void scenarioHeritage() {
+	PointPondere p("H", 5.6, 6.5, 12.45);
+	cout << p.toString() << endl;
+	cout << "X = " << p.getX() << endl;
+	cout << "Poids = " << p.getPoids() << endl;
 }
 
 int main () {
-	scenario5();
+	scenarioHeritage();
+	// scenarioGdeDistance();
+	// cout << Cercle::PI << endl;
 	return 0;
 }

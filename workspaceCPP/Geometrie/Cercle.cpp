@@ -5,8 +5,10 @@
  *      Author: AELION
  */
 #include <sstream>
+#include <cmath>
 #include "Cercle.h"
 
+const double Cercle::PI = 4*atan(1);
 
 Cercle::Cercle(Point *centre, double rayon):centre(centre), rayon(rayon) {
 }
@@ -31,6 +33,11 @@ void Cercle::setRayon(double rayon) {
 	this->rayon = rayon;
 }
 
+bool Cercle::contient(const Point &p) const  {
+	return centre->distance(p) <= rayon;
+	//return p.distance(*centre) <= rayon;
+}
+
 string Cercle::toString() const{
 	ostringstream res;
 	res << "Cercle<" << centre << ";" << rayon << ">";
@@ -39,4 +46,8 @@ string Cercle::toString() const{
 
 ostream& operator <<(ostream &out, const Cercle &cercle) {
 	return out << cercle.toString();
+}
+
+double Cercle::perimetre() const {
+	return 2*PI*rayon;
 }

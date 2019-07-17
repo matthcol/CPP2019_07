@@ -21,7 +21,13 @@ public:
 	double getRayon() const;
 	void setRayon(double rayon);
 
+	double perimetre() const;
+
+	bool contient(const Point &p) const;
+
 	string toString() const;
+
+	static const double PI;  // membre de classe (static)
 
 private:
 	Point *centre;
