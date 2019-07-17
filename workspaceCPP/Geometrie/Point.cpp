@@ -20,7 +20,7 @@ Point::Point(const string &nom, double x, double y):Figure(nom), x(x), y(y)
 	clog << "Point créé avec 3 paramètres : " << *this << endl;
 }
 
-Point::Point(const Point &other):Figure(other.getNom()), x(other.x), y(other.y) {
+Point::Point(const Point &other):Figure(other), x(other.x), y(other.y) {
 	clog << "Point créé par copie : " << *this << endl;
 }
 
