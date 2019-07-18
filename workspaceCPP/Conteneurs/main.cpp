@@ -40,9 +40,7 @@ template <class Container>
 void displayContainer(const Container &container, char bullet='.') {
 	auto it = begin(container);
 	auto last = end(container);
-	for (; it != last ; ++it) {
-		cout << bullet << ' ' << *it << endl;
-	}
+	displayContainer(it, last, bullet);
 }
 
 int main(){
