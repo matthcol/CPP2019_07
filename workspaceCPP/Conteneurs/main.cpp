@@ -9,6 +9,7 @@
 #include <vector>
 #include <list>
 #include <array>
+#include <set>
 #include <map>
 #include <cmath>
 #include <numeric>
@@ -51,7 +52,8 @@ int main(){
 	displayContainer(pressions);
 	cout << "pression à l'index 1 : " << pressions[1] << endl;
 
-	auto it = pressions.begin();
+	vector<double>::iterator it = pressions.begin();
+	//auto it = pressions.begin();
 	auto fin = pressions.end();
 //	for (it+=2; it != (fin-1); ++it) {   // ++it à préférer à it++, avancer d'une case
 //		cout << "- valeur courante : " << *it << endl;
@@ -103,8 +105,39 @@ int main(){
 
 	sort(pressions.begin(), pressions.end()); // utilise less<double> i.e. <
 	displayContainer(pressions, '<');
+
 	sort(pressions.begin(), pressions.end(), greater<double>());
 	displayContainer(pressions, '>');
+
+	displayContainer(qqsPressions, '~');
+	// set<double> pressionsTriees(qqsPressions.begin(), qqsPressions.end());  // basé sur <
+	set<double, greater<double>> pressionsTriees(qqsPressions.begin(), qqsPressions.end());
+	displayContainer(pressionsTriees, '/');
+	auto resInsert = pressionsTriees.insert(20.5);
+	cout << "ajout dans le set : " << boolalpha << resInsert.second << endl;
+	displayContainer(pressionsTriees, '$');
+	resInsert = pressionsTriees.insert(20.5);
+	cout << "ajout dans le set : " << boolalpha << resInsert.second << endl;
+	displayContainer(pressionsTriees, '£');
+	auto posInsert = pressionsTriees.insert(resInsert.first, 20.6);
+	displayContainer(pressionsTriees, '@');
+
+	for (auto it = pressions.begin(); it != pressions.end(); ++it) {
+		if (*it > 100.0) {
+			*it = 100.0;
+		}
+	}
+	displayContainer(pressions, '=');
+
+	const vector<double> v = {1.0};
+	//auto itV = v.begin();
+	vector<double>::const_iterator itV = v.begin();
+	//*itV = 5.0;  // modif interdite sur un const_iterator
+	++itV;
+
+	for (auto it = pressions.rbegin(); it != pressions.rend(); ++it) {
+			cout << "r:" << *it << endl;
+	}
 	return 0;
 }
 
