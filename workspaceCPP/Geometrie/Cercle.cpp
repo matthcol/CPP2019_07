@@ -10,7 +10,8 @@
 
 const double Cercle::PI = 4*atan(1);
 
-Cercle::Cercle(Point *centre, double rayon):centre(centre), rayon(rayon) {
+Cercle::Cercle(const string &nom,Point *centre, double rayon):
+		Figure(nom), centre(centre), rayon(rayon) {
 }
 
 Cercle::~Cercle() {
@@ -40,14 +41,20 @@ bool Cercle::contient(const Point &p) const  {
 
 string Cercle::toString() const{
 	ostringstream res;
-	res << "Cercle<" << centre << ";" << rayon << ">";
+	res << getNom() << "<" << centre << ";" << rayon << ">";
 	return res.str();
 }
 
-ostream& operator <<(ostream &out, const Cercle &cercle) {
-	return out << cercle.toString();
-}
 
 double Cercle::perimetre() const {
 	return 2*PI*rayon;
 }
+
+double Cercle::aire() const {
+	return PI*pow(rayon,2);
+}
+
+void Cercle::translater(double deltaX, double deltaY) {
+	centre->translater(deltaX, deltaY);
+}
+

@@ -9,10 +9,11 @@
 #define CERCLE_H_
 
 #include "Point.h"
+#include "Mesurable2D.h"
 
-class Cercle {
+class Cercle: public Figure, public Mesurable2D {
 public:
-	Cercle(Point *centre, double rayon);
+	Cercle(const string &nom,Point *centre, double rayon);
 	virtual ~Cercle();
 
 	Point* getCentre() const;
@@ -21,7 +22,8 @@ public:
 	double getRayon() const;
 	void setRayon(double rayon);
 
-	double perimetre() const;
+	double perimetre() const override;
+	double aire() const override;
 
 	bool contient(const Point &p) const;
 
@@ -29,11 +31,11 @@ public:
 
 	static const double PI;  // membre de classe (static)
 
+	void translater(double deltaX, double deltaY) override;
+
 private:
 	Point *centre;
 	double rayon;
 };
-
-ostream& operator<<(ostream &out, const Cercle& cercle);
 
 #endif /* CERCLE_H_ */

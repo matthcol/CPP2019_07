@@ -25,3 +25,10 @@ void Figure::setNom(const string &nom) {
 	this->nom = nom;
 }
 
+ostream& operator <<(ostream &out, const Figure &f) {
+	return out << f.toString();
+}
+
+ostream& operator <<(ostream &out, const Figure *f) {
+	return out << *f;
+}

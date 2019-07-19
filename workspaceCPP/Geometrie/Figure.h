@@ -20,9 +20,13 @@ public:
 	const string& getNom() const;
 	void setNom(const string &nom);
 
+	virtual string toString() const=0;
 	virtual void translater(double deltaX, double deltaY)=0; // virtuelle pure
 private:
 	string nom;
 };
+
+ostream &operator<<(ostream &out, const Figure &f);
+ostream &operator<<(ostream &out, const Figure *f);
 
 #endif /* FIGURE_H_ */

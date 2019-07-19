@@ -10,7 +10,7 @@
 #include <sstream>
 #include <cmath>
 
-Point::Point():x(0.0), y(0.0) {
+Point::Point():Figure(),x(0.0), y(0.0) {
 	clog << "Point créé avec 0 paramètre : " << *this << endl;
 }
 
@@ -42,15 +42,6 @@ Point& Point::operator+=(const Point &other) {
 	y += other.y;
 	return *this;
 }
-
-ostream& operator <<(ostream &out, const Point &p) {
-	return out << p.toString();
-}
-
-ostream& operator <<(ostream &out, const Point *p) {
-	return out << *p;
-}
-
 
 double Point::getX() const {
 	return x;
@@ -84,3 +75,33 @@ void Point::translater(double deltaX, double deltaY) {
 	x += deltaX;
 	y += deltaY;
 }
+
+bool lessXYNomPtr(const Point *pp1, const Point *pp2) {
+	return lessXYNom(*pp1,*pp2);
+}
+
+bool lessXYNom(const Point &p1, const Point &p2) {
+	bool res = p1.getX() == p2.getX();
+	if (!res) {
+		return p1.getX() < p2.getX();
+	} else {
+		res = p1.getY() == p2.getY();
+		if (!res) {
+			return p1.getY() < p2.getY();
+		} else {
+			return p1.getNom() < p2.getNom();
+		}
+	}
+}
+
+bool Point::operator==(const Point &other) const {
+	return this->getNom() == other.getNom()
+			&& this->getX() == other.getX()
+			&& this->getY() == other.getY();
+}
+
+bool Point::operator<(const Point &other) const {
+	return lessXYNom(*this, other);
+}
+
+

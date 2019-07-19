@@ -6,13 +6,19 @@
  */
 using namespace std;
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <vector>
+#include <map>
 #include <cmath>
+#include <algorithm>
+#include <regex>
 
 #include "Point.h"
 #include "Cercle.h"
 #include "PointPondere.h"
+#include "Polygone.h"
+#include "Mesurable2D.h"
 
 void scenario1() {
 	Point p;
@@ -136,12 +142,14 @@ void scenario5() {
 	Point pA("A", 3.0, 4.0);
 	Point pB("B", 1.0, 2.0);
 	Point pE("E", -0.1, 0.0);
-	Cercle c(&pA, 5.0);
+	Cercle c("C", &pA, 5.0);
 	cout << "point : " << pA << endl;
 	cout << "cercle : " << c << endl;
 	cout << pB << " dans " << c << " : " << boolalpha << c.contient(pB) << endl;
 	cout << pE << " dans " << c << " : " << boolalpha << c.contient(pE) << endl;
 	cout << pA << " dans " << c << " : " << boolalpha << c.contient(pA) << endl;
+	Cercle * pc;
+	//pc = new Cercle(&pA, 5.0);
 }
 
 void scenarioGdeDistance() {
@@ -163,11 +171,11 @@ void scenarioHeritage() {
 	double d2 = pH.distance(pA); // on peut appeler sur un PP une méthode d'un P
 	cout << "distances : " << d1 << " ; " << d2 << endl;
 
-	Cercle c(&pH, 5.0);
+	Cercle c("C", &pH, 5.0);
 	cout << c << endl;
 
 	pA = pH; // copie du PP pH en tant que P
-	cout << pA << endl;
+	cout << "copie : " << pA << endl;
 	cout << "pA est-il un Point ? " << boolalpha <<
 			(typeid(pA) == typeid(Point)) << endl;
 	cout << "pA est-il un PointPondéré ? " << boolalpha <<
@@ -195,9 +203,190 @@ void scenarioHeritage() {
 	delete pp;
 }
 
+template<class T>
+void displayVector(const vector<T> &aVector) {
+	for (const auto &t : aVector) {
+		cout << t << " ";
+	}
+	cout << endl;
+}
+
+template<class InputIterator>
+void enregistrerData(InputIterator first, InputIterator last, const string &filename) {
+	ofstream file;
+	file.open(filename, ofstream::out); //  | ofstream::app);
+	for ( ; first != last; ++first) {
+		const auto &v = *first;
+		file << v << endl;
+	}
+	file.close();
+}
+
+template<class Conteneur>
+void enregistrerData(const Conteneur &conteneur, const string &filename) {
+	enregistrerData(begin(conteneur), end(conteneur), filename);
+}
+
+void scenarioFigures() {
+	Point pA("A", 1.25, 5.25);
+	Point pB("B", 5.5, -4.75);
+	Point pC("C", 4.125, 7.75);
+	Point pAA("AA", 4.125, 7.75);
+	PointPondere pE("E", 1.25, -0.5, 45.3);
+	Cercle c1("C1", &pA, 10.0);
+	Cercle c2("C2", &pE, 5.0);
+	Polygone py;
+	vector<Figure*> figures = { &pA, &pB, &pC, &pE, &c1, &c2, &py, &pAA };
+	displayVector(figures);  // appel du template avec T=Figure*
+	// translater toutes les figures
+	for (auto &f: figures){
+		f->translater(1.0, -1.0);
+	}
+	displayVector(figures);
+
+	double aireTotale;
+	for (auto &f: figures){
+		Mesurable2D *c = dynamic_cast<Mesurable2D*>(f); // nullptr si f n'est pas un cercle
+		if (c != nullptr) {
+			aireTotale += c->aire();
+		}
+	}
+	cout << "aire totale : " << aireTotale << endl;
+	// i.e. : displayVector<Figure*>(figures);
+
+	vector<Point*> points;
+	// reverser les points du vecteur de figures dans le vecteur de points
+	for (auto &f: figures) {
+		if (Point *p = dynamic_cast<Point *>(f)) {
+			points.push_back(p);
+		}
+	}
+
+	displayVector(points);   // appel du template avec T=Point*
+	sort(points.begin(), points.end(),
+			[](Point *p1, Point *p2){return p1->getX() < p2->getX();});
+	displayVector(points);
+	sort(points.begin(), points.end(), lessXYNomPtr);
+	displayVector(points);
+	sort(points.begin(), points.end(),
+				[](auto p1, auto p2){return p1->getNom() < p2->getNom();});
+	displayVector(points);
+	sort(points.begin(), points.end());  // compare les @
+	displayVector(points);
+	sort(points.begin(), points.end(),
+			[](auto pp1, auto pp2){return *pp1 < *pp2;});  // compare les points avec <
+	displayVector(points);
+
+	vector<Point> v = {pA, pB, pAA};
+	sort(v.begin(), v.end());  // compare les points avec le < de la classe Point
+	for (auto &e : v) {
+		cout << e << " ";
+	}
+	cout << endl;
+
+	// pA > pB;  // pas offert :(
+	map<string, Figure*> indexNomFigure;
+	for (auto pf: figures) {
+		indexNomFigure[pf->getNom()] = pf;
+	}
+	for (auto &paireNomFigure: indexNomFigure) {
+		cout << "- " << paireNomFigure.first
+				<< " : "<< paireNomFigure.second << endl;
+	}
+
+	Figure *f = indexNomFigure["C1"];
+	cout << "figure C1 : " << f << endl;
+
+	Point fauxC1("C1",0.0,0.0);
+	indexNomFigure["C1"] = &fauxC1;
+	cout << "figure C1 : " << indexNomFigure["C1"] << endl;
+
+//	map<string, vector<Figure*>> indexAvecDoublons;
+//	map<string, vector<Film*>> indexTitreFilm;
+
+	enregistrerData(figures, "figures.txt");
+	enregistrerData(points, "points.txt");
+
+	// Citation : "la mort de l'homme que j'ai désiré(e)"
+}
+
+Point *lirePoint(string pointStr) {
+	regex r("[a-z][a-z\\d]*\\(-?[\\d]+\\.[\\d]+,-?[\\d]+\\.[\\d]+\\)", regex_constants::icase);
+	if (regex_match(pointStr,r)) {
+		// cout << "c'est 1 point" << endl;
+		int p1 = pointStr.find("(");
+		int p2 = pointStr.find(",", p1+1);
+		int p3 = pointStr.find(")", p2+1);
+		string nom = pointStr.substr(0, p1);
+		string xStr = pointStr.substr(p1+1, p2-p1-1);
+		string yStr = pointStr.substr(p2+1, p3-p2-1);
+		//cout << "#" << nom << "#" << xStr << "#" << yStr << "#" << endl;
+		double x = stod(xStr);
+		double y = stod(yStr);
+		Point *pp = new Point(nom, x, y);
+		return pp;
+	} else {
+		return nullptr;
+	}
+}
+
+vector<Point*> *lirePoints(string filename) {
+	vector<Point*> *res = new vector<Point*>;
+	ifstream file;
+	string line;
+	file.open(filename, ifstream::in);
+	while(getline(file, line)) {
+		Point *pp = lirePoint(line);
+		if (pp) {
+			res->push_back(pp);
+		}
+	}
+	return res;
+}
+
+void scenarioLecture() {
+	string filename = "pointsIn.txt";
+	vector<Point*> *ppoints = lirePoints(filename);
+	displayVector(*ppoints);
+	clearData(ppoints);
+
+	filename = "figures.txt";
+	ppoints = lirePoints(filename);
+	displayVector(*ppoints);
+	clearData(ppoints);
+}
+
+void scenarioAnalysePointTexte(){
+	string line="E(3.25,-2.5)";
+	// Regex
+	// + : 1 à n fois
+	// * : 0 à n fois
+	// ? : 0 ou 1 fois
+	// ( ) : isoler 1 expression
+	// . : n'importe quel caractère
+	// regex r("[A-Za-z][A-Za-z0-9]*\\(-?[0-9]+\\.[0-9]+,-?[0-9]+\\.[0-9]+\\)");
+	regex r("[a-z][a-z\\d]*\\(-?[\\d]+\\.[\\d]+,-?[\\d]+\\.[\\d]+\\)", regex_constants::icase);
+	if (regex_match(line,r)) {
+		cout << "c'est 1 point" << endl;
+		int p1 = line.find("(");
+		int p2 = line.find(",", p1+1);
+		int p3 = line.find(")", p2+1);
+		string nom = line.substr(0, p1);
+		string xStr = line.substr(p1+1, p2-p1-1);
+		string yStr = line.substr(p2+1, p3-p2-1);
+		cout << "#" << nom << "#" << xStr << "#" << yStr << "#" << endl;
+		double x = stod(xStr);
+		double y = stod(yStr);
+		Point p(nom, x, y);
+		cout << "objet point : " << p << endl;
+
+
+	} else {
+		cout << "ce n'est pas un point" << endl;
+	}
+}
+
 int main () {
-	scenarioHeritage();
-	// scenarioGdeDistance();
-	// cout << Cercle::PI << endl;
+	scenarioLecture();
 	return 0;
 }
